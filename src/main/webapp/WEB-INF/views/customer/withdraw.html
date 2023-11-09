@@ -1,0 +1,47 @@
+
+
+<th:block th:fragment="modalWithdraw">
+  <div class="modal fade" id="modalWithdraw">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Modal Withdraw</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="error-area mb-3 hide"></div>
+          <form id="formWdr" method="post">
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <label for="idWdr">ID</label>
+                <input type="text" name="idWdr" id="idWdr" class="form-control" readonly>
+              </div>
+              <div class="col-lg-4">
+                <label for="fullNameWdr">Fullname</label>
+                <input type="text" name="fullNameWdr" id="fullNameWdr" class="form-control" readonly>
+              </div>
+              <div class="col-lg-4">
+                <label for="emailWdr">Email</label>
+                <input type="text" name="emailWdr" id="emailWdr" class="form-control" readonly>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-lg-6">
+                <label for="balanceWdr">Balance</label>
+                <input type="text" name="balanceWdr" id="balanceWdr" class="form-control" readonly>
+              </div>
+              <div class="col-lg-6">
+                <label for="amountWdr">Transaction Amount(VND)</label>
+                <input type="text" name="amountWdr" id="amountWdr" class="form-control">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btnWithdraw" id="btnWithdraw">Withdraw</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>

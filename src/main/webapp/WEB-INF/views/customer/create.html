@@ -1,0 +1,53 @@
+<th:block th:fragment="modalCreate">
+    <div class="modal fade" id="modalCreate" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal create</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCreate" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <label for="fullNameCre">FullName</label>
+                                <input type="text" id="fullNameCre" name="fullNameCre" class="form-control">
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="emailCre">Email</label>
+                                <input type="text" id="emailCre" name="emailCre" class="form-control">
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="phoneCre">Phone</label>
+                                <input type="tel" id="phoneCre" name="phoneCre" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+
+                            <div class="col-lg-3">
+                                <label for="provinceCre">Province</label>
+                                <select name="" id="provinceCre" class="form-select"></select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="districtCre">District</label>
+                                <select name="" id="districtCre" class="form-select"></select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="wardCre">Ward</label>
+                                <select name="" id="wardCre" class="form-select"></select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="addressCre">Address</label>
+                                <input type="text" id="addressCre" name="addressCre" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

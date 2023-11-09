@@ -1,0 +1,47 @@
+
+
+<th:block th:fragment="modalDeposit">
+    <div class="modal fade" id="modalDeposit">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Deposit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area mb-3 hide"></div>
+                    <form id="formDes" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <label for="idDes">ID</label>
+                                <input type="text" name="idDes" id="idDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="fullNameDes">Fullname</label>
+                                <input type="text" name="fullNameDes" id="fullNameDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="emailDes">Email</label>
+                                <input type="text" name="emailDes" id="emailDes" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="balanceDes">Balance</label>
+                                <input type="text" name="balanceDes" id="balanceDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="amountDes">Transaction Amount(VND)</label>
+                                <input type="text" name="amountDes" id="amountDes" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btnDeposit" id="btnDeposit">Deposit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

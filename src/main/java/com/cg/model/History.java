@@ -26,8 +26,13 @@ public class History {
     @ManyToOne
     private Customer recipient;
 
+    @Column(precision = 10, scale = 0)
     private BigDecimal transactionAmount;
+
+    @Column(precision = 10, scale = 0)
     private BigDecimal fee;
+
+    @Column(precision = 10, scale = 0)
     private BigDecimal transferAmount;
 
     private Date transactionDate;

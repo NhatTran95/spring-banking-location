@@ -1,5 +1,6 @@
 .bg-body-tertiary {
     background-color: #299be4 !important;
+    padding: 0 20px;
 }
 
 .navbar-brand {
@@ -74,4 +75,8 @@ input.error {
 
 form label {
     font-weight: bold;
+}
+
+.container-fluid {
+    --bs-gutter-x: 0;
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.*;
@@ -65,6 +66,32 @@ public class Customer implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+        Customer customer = (Customer) o;
+        String fullName = customer.getFullName();
+        if(fullName.length() == 0 ) {
+            errors.rejectValue("fullName", "fullName.empty", "Vui lòng nhập họ tên đầy đủ");
+        }else if(fullName.length()<6 || fullName.length()>20) {
+            errors.rejectValue("fullName", "fullName.length", "Vui lòng nhập họ tên từ 6 đến 20 kí tự");
+        }
+
+
+        String email = customer.getEmail();
+
+        if(email.length() == 0) {
+            errors.rejectValue("email", "email.empty", "Vui lòng nhập email đầy đủ");
+        }else if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            errors.rejectValue("email", "email.matches", "Vui lòng nhập email theo định dạng 'xxx@xxx.xxx'");}
+
+
+        String phone = customer.getPhone();
+        if(phone.length() == 0) {
+            errors.rejectValue("phone","phone.empty", "Vui lòng nhập số điện thoại đầy đủ");
+        }
+
+        String address = customer.locationRegion.getAddress();
+        if(address.length() == 0) {
+            errors.rejectValue("locationRegion.address", "address.empty", "Vui lòng nhập địa chỉ đầy đủ");
+        }
 
     }
 }

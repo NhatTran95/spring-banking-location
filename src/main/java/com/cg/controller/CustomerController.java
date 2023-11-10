@@ -26,7 +26,7 @@ public class CustomerController {
 
     @GetMapping
     public String showListPage(Model model) {
-        return "customer/list";
+        return "customer/index";
     }
 
 //    @GetMapping("/create")

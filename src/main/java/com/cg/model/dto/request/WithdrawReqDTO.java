@@ -16,8 +16,8 @@ import java.math.BigDecimal;
 @Getter
 @Accessors(chain = true)
 public class WithdrawReqDTO implements Validator {
-    private String customerId;
-    private String transactionAmount;
+    private String idCustomer;
+    private String amount;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -27,19 +27,19 @@ public class WithdrawReqDTO implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         WithdrawReqDTO withdrawReqDTO = (WithdrawReqDTO) o;
-        BigDecimal transactionAmount = new BigDecimal(withdrawReqDTO.getTransactionAmount());
+        BigDecimal transactionAmount = new BigDecimal(withdrawReqDTO.getAmount());
 
-        if(transactionAmount == null || withdrawReqDTO.getTransactionAmount().isEmpty()) {
-            errors.rejectValue("transactionAmount", "wdr.transactionAmount", "Vui lòng nhập số tiền muốn rút");
+        if(transactionAmount == null || withdrawReqDTO.getAmount().isEmpty()) {
+            errors.rejectValue("amount", "wdr.transactionAmount", "Vui lòng nhập số tiền muốn rút");
             return;
         }
-        if(transactionAmount.compareTo(BigDecimal.valueOf(1000)) < 0) {
-            errors.rejectValue("transactionAmount", "wdr.transactionAmount.min", "Vui lòng nhập số tiền lớn hơn 1.000");
+        if(transactionAmount.compareTo(BigDecimal.valueOf(10000)) < 0) {
+            errors.rejectValue("amount", "wdr.transactionAmount.min", "Vui lòng nhập số tiền tối thiểu là 10.000");
             return;
         }
 
         if(transactionAmount.compareTo(BigDecimal.valueOf(100000000)) > 0) {
-            errors.rejectValue("transactionAmount", "wdr.transactionAmount.max", "Vui lòng nhập số tiền nhỏ hơn 100.000.000");
+            errors.rejectValue("amount", "wdr.transactionAmount.max", "Vui lòng nhập số tiền tối đa là 100.000.000");
         }
 
 

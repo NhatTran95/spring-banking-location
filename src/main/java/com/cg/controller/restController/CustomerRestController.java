@@ -1,5 +1,6 @@
 package com.cg.controller.restController;
 
+import com.cg.exception.DataInputException;
 import com.cg.model.Customer;
 import com.cg.model.Deposit;
 import com.cg.model.Withdraw;
@@ -38,7 +39,11 @@ public class CustomerRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResDTO> create(@RequestBody Customer customer) {
+    public ResponseEntity<?> create(@RequestBody Customer customer, BindingResult bindingResult) {
+        new Customer().validate(customer, bindingResult);
+        if(bindingResult.hasErrors()){
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
         Customer newCustomer = customerService.createCustomer(customer);
         CustomerResDTO newCustomerResDTO = newCustomer.toCustomerResDTO();
         return new ResponseEntity<>(newCustomerResDTO, HttpStatus.CREATED);
@@ -46,9 +51,9 @@ public class CustomerRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResDTO> getById(@PathVariable Long id) {
-        Optional<Customer> customerOptional = customerService.findById(id);
-
-        Customer customer = customerOptional.get();
+        Customer customer = customerService.findById(id).orElseThrow(() -> {
+            throw new DataInputException("không tìm thấy thông tin khách hàng");
+        });
 
         CustomerResDTO customerResDTO = customer.toCustomerResDTO();
 
@@ -57,11 +62,13 @@ public class CustomerRestController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable Long id, BindingResult bindingResult) {
-//        new Customer().validate(customer, bindingResult);
+        new Customer().validate(customer, bindingResult);
         Optional<Customer> customerOld = customerService.findById(id);
-        if(bindingResult.hasFieldErrors() || customerOld.isEmpty()) {
+        if (customerOld.isEmpty()) {
             FieldError fieldError = new FieldError("customer", "id", "không tìm thấy thông tin khách hàng");
             bindingResult.addError(fieldError);
+            return appUtils.mapErrorToResponse(bindingResult);
+        }else if (bindingResult.hasErrors()){
             return appUtils.mapErrorToResponse(bindingResult);
         }
         Customer customerUpdate = customerService.update(customer);
@@ -79,11 +86,11 @@ public class CustomerRestController {
     public ResponseEntity<?> deposit(@RequestBody DepositReqDTO depositReqDTO, BindingResult bindingResult) {
         new DepositReqDTO().validate(depositReqDTO, bindingResult);
 
-        Optional<Customer> customer = customerService.findById(Long.valueOf(depositReqDTO.getCustomerId()));
-        BigDecimal transactionAmount = BigDecimal.valueOf(Long.parseLong(String.valueOf(depositReqDTO.getTransactionAmount())));
+        Optional<Customer> customer = customerService.findById(Long.valueOf(depositReqDTO.getIdCustomer()));
+        BigDecimal transactionAmount = BigDecimal.valueOf(Long.parseLong(String.valueOf(depositReqDTO.getAmount())));
 
         if (customer.isEmpty()) {
-            FieldError fieldError = new FieldError("depositReqDTO", "customerId", "Không tìm thấy thông tin người dùng");
+            FieldError fieldError = new FieldError("depositReqDTO", "idCustomer", "Không tìm thấy ID người dùng");
             bindingResult.addError(fieldError);
         }
 
@@ -105,15 +112,15 @@ public class CustomerRestController {
     public ResponseEntity<?> withdraw(@RequestBody WithdrawReqDTO withdrawReqDTO, BindingResult bindingResult) {
         new WithdrawReqDTO().validate(withdrawReqDTO, bindingResult);
 
-        Optional<Customer> customer = customerService.findById(Long.valueOf(withdrawReqDTO.getCustomerId()));
-        BigDecimal transactionAmount = BigDecimal.valueOf(Long.parseLong(withdrawReqDTO.getTransactionAmount()));
+        Optional<Customer> customer = customerService.findById(Long.valueOf(withdrawReqDTO.getIdCustomer()));
+        BigDecimal transactionAmount = BigDecimal.valueOf(Long.parseLong(withdrawReqDTO.getAmount()));
 
 
         if (customer.isEmpty()) {
-            FieldError fieldError = new FieldError("withdrawReqDTO", "customerId", "Không tìm thấy thông tin người dùng");
+            FieldError fieldError = new FieldError("withdrawReqDTO", "idCustomer", "Không tìm thấy ID người dùng");
             bindingResult.addError(fieldError);
         }else if (transactionAmount.compareTo(customer.get().getBalance()) > 0) {
-            FieldError error = new FieldError("withdrawReqDTO", "transactionAmount", "Số dư không đủ để rút");
+            FieldError error = new FieldError("withdrawReqDTO", "amount", "Số dư không đủ để rút");
             bindingResult.addError(error);
             return appUtils.mapErrorToResponse(bindingResult);
         }
@@ -139,8 +146,14 @@ public class CustomerRestController {
         Optional<Customer> senderOptional = customerService.findById(Long.parseLong(transferReqDTO.getSenderId()));
         Optional<Customer> recipientOptional = customerService.findById(Long.parseLong(transferReqDTO.getRecipientId()));
 
+        if(transferReqDTO.getSenderId().equals(transferReqDTO.getRecipientId())) {
+            FieldError fieldError = new FieldError("transferReqDTO", "recipientId", "ID người nhận trùng người gửi");
+            bindingResult.addError(fieldError);
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
+
         if (recipientOptional.isEmpty()) {
-            FieldError fieldError = new FieldError("transferReqDTO", "recipientId", "Không tìm thấy thông tin người nhận");
+            FieldError fieldError = new FieldError("transferReqDTO", "recipientId", "Không tìm thấy ID người nhận");
             bindingResult.addError(fieldError);
         }
 
@@ -150,7 +163,7 @@ public class CustomerRestController {
         BigDecimal transactionAmount = transferAmount.add(feeAmount);
 
         if (senderOptional.isEmpty()) {
-            FieldError fieldError = new FieldError("transferReqDTO", "senderId", "Không tìm thấy thông tin người gửi");
+            FieldError fieldError = new FieldError("transferReqDTO", "senderId", "Không tìm thấy ID người gửi");
             bindingResult.addError(fieldError);
         }else if (transactionAmount.compareTo(senderOptional.get().getBalance()) > 0) {
             FieldError fieldError = new FieldError("transferReqDTO", "transferAmount", "Số tiền trong tài khoản không đủ để thực hiện giao dịch");
